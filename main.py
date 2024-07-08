@@ -22,11 +22,8 @@ def read_root():
 
 
 
-
-
-
 # Ruta base al archivo CSV en tu escritorio (ejemplo)
-data= "C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/dataAPi_7colum.csv"
+data= "dataAPi_7colum.csv"
 
 # Función para cargar datos desde un archivo CSV
 def cargar_datos():
