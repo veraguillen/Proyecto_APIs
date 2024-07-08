@@ -18,7 +18,25 @@ def health_check():
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+# Función para cargar datos desde un archivo CSV en Render
 
+
+def cargar_datos():
+    csv_file = "dataAPi_7colum.csv"  # Nombre del archivo CSV en Render
+    try:
+        data = pd.read_csv(csv_file)
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="Archivo de datos no encontrado")
+    except pd.errors.EmptyDataError:
+        raise HTTPException(status_code=500, detail="El archivo de datos está vacío")
+    except pd.errors.ParserError:
+        raise HTTPException(status_code=500, detail="Error al parsear el archivo de datos")
+    return data
+
+
+
+
+'''''
 # Ruta base al archivo CSV en tu escritorio (ejemplo)
 data= "C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/dataAPi_7colum.csv"
 
@@ -34,7 +52,7 @@ def cargar_datos():
         raise HTTPException(status_code=500, detail="Error al parsear el archivo de datos")
     return data
 
-
+'''''
 
 
 # Endpoint para buscar y mostrar información de una película por su título
