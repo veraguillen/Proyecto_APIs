@@ -10,26 +10,6 @@ import uvicorn
 app = FastAPI()
 
 
-# Determina la ubicación del archivo CSV
-ruta_archivo = "dataAPi_7colum.csv"  # Ruta relativa (asume que el archivo está en el mismo directorio)
-
-
-# Obtener la ruta del directorio actual
-ruta_directorio_actual = os.getcwd()
-
-# Construir la ruta completa del archivo CSV
-ruta_completa_archivo = os.path.join(ruta_directorio_actual, ruta_archivo)
-
-# Usar la ruta completa del archivo en tu script
-with open(ruta_completa_archivo, "r") as archivo:
-    # Leer o procesar el contenido del archivo CSV
-    datos_csv = archivo.read()
-    # ... Procesar los datos ...
-
-
-
-
-
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
@@ -38,13 +18,17 @@ def health_check():
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-# Función para cargar datos desde un archivo CSV en Render
+
+# Definir la ruta al archivo CSV
+ruta_archivo = "dataAPi_7colum.csv"
+
+# Obtener la ruta completa al archivo CSV en el directorio actual de Render
+ruta_completa_archivo = os.path.join(os.getcwd(), ruta_archivo)
 
 
-# Función para cargar datos desde un archivo CSV
 def cargar_datos():
     try:
-        data = pd.read_csv(datos_csv)
+        data = pd.read_csv(ruta_completa_archivo)
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="Archivo de datos no encontrado")
     except pd.errors.EmptyDataError:
@@ -52,9 +36,6 @@ def cargar_datos():
     except pd.errors.ParserError:
         raise HTTPException(status_code=500, detail="Error al parsear el archivo de datos")
     return data
-
-
-
 
 # Endpoint para buscar y mostrar información de una película por su título
 @app.get("/titulo/", tags=["Endpoint 1"])
