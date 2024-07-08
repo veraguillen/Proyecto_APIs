@@ -139,10 +139,12 @@ def estrenos_por_mes(mes: str = Query(..., description="Mes del estreno en espa√
     
     return {"cantidad_estrenos en el mes solicitado fue": cantidad}
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 
 # Iniciar la aplicaci√≥n con Uvicorn
-
-
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
