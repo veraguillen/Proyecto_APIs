@@ -1,10 +1,13 @@
 
 from fastapi import FastAPI, HTTPException, Query
 import pandas as pd
-
+import os
 # Crear una instancia de FastAPI
 app = FastAPI()
 
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 
 # Función para cargar datos desde un archivo CSV
@@ -138,6 +141,9 @@ def estrenos_por_mes(mes: str = Query(..., description="Mes del estreno en espa�
 
 
 # Iniciar la aplicación con Uvicorn
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
