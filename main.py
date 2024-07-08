@@ -4,8 +4,7 @@ import pandas as pd
 import os
 from pydantic import BaseModel
 import uvicorn
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+
 
 # Crear una instancia de FastAPI
 app = FastAPI()
@@ -39,7 +38,8 @@ def cargar_datos():
     return data
 
 
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Vectorización TF-IDF de los títulos de las películas
 data = cargar_datos()
