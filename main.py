@@ -5,10 +5,12 @@ import pandas as pd
 # Crear una instancia de FastAPI
 app = FastAPI()
 
+
+
 # Función para cargar datos desde un archivo CSV
 def cargar_datos():
     try:
-        data = pd.read_csv("C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/Datos_Funciones_API.csv")
+        data = pd.read_csv("C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/dataAPi_7colum.csv")
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="Archivo de datos no encontrado")
     except pd.errors.EmptyDataError:
@@ -22,7 +24,7 @@ def cargar_datos():
 
 # Endpoint para buscar y mostrar información de una película por su título
 @app.get("/titulo/", tags=["Endpoint 1"])
-def score_titulo(titulo_pelicula: str = Query(..., description="El título de la filmación a buscar")):
+def score_titulo(titulo_pelicula: str = Query(..., description="El título de la película a buscar")):
     # Cargar la base de datos
     data = cargar_datos()
 
@@ -30,7 +32,7 @@ def score_titulo(titulo_pelicula: str = Query(..., description="El título de la
     filmacion = data[data['titulo_pelicula'].str.lower() == titulo_pelicula.lower()]
 
     if filmacion.empty:
-        raise HTTPException(status_code=404, detail="Filmación no encontrada")
+        raise HTTPException(status_code=404, detail="película no encontrada")
 
     # Obtener los datos
     titulo = filmacion['titulo_pelicula'].values[0]
