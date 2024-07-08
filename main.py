@@ -4,7 +4,8 @@ import pandas as pd
 import os
 from pydantic import BaseModel
 import uvicorn
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Crear una instancia de FastAPI
 app = FastAPI()
@@ -36,6 +37,53 @@ def cargar_datos():
     except pd.errors.ParserError:
         raise HTTPException(status_code=500, detail="Error al parsear el archivo de datos")
     return data
+
+
+
+
+# Vectorización TF-IDF de los títulos de las películas
+data = cargar_datos()
+tfidf = TfidfVectorizer(stop_words='english')
+tfidf_matrix = tfidf.fit_transform(data['titulo_pelicula'])
+
+
+# Calcular la matriz de similitud del coseno
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+
+@app.get("/modelo de recomendacion/", tags=["Endpoint 1"])
+def score_titulo(titulo_pelicula: str = Query(..., description="El título de la película a buscar")):
+    filmacion = data[data['titulo_pelicula'].str.lower() == titulo_pelicula.lower()]
+    if filmacion.empty:
+        raise HTTPException(status_code=404, detail="película no encontrada")
+    titulo = filmacion['titulo_pelicula'].values[0]
+    año = filmacion['year_estreno'].values[0]
+    score = filmacion['vote_average'].values[0]
+    return {"mensaje": f"La película {titulo} fue estrenada en el año {año} con un score/popularidad de {score}"}
+
+
+@app.get("/recomendacion/", tags=["Endpoint 6"])
+def recomendacion_endpoint(titulo: str = Query(..., description="El título de la película a buscar recomendaciones")):
+    return recomendacion(titulo)
+
+def recomendacion(titulo):
+    idx = data[data['titulo'].str.lower() == titulo.lower()].index
+    if len(idx) == 0:
+        raise HTTPException(status_code=404, detail="película no encontrada")
+    idx = idx[0]
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:6]
+    movie_indices = [i[0] for i in sim_scores]
+    return data['titulo'].iloc[movie_indices].tolist()
+
+
+
+
+
+
+
+
+
 
 # Endpoint para buscar y mostrar información de una película por su título
 @app.get("/titulo/", tags=["Endpoint 1"])
