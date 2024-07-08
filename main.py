@@ -1,14 +1,26 @@
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException , Query
 import pandas as pd
 import os
+from pydantic import BaseModel
+import uvicorn
+
+
 # Crear una instancia de FastAPI
 app = FastAPI()
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+# Ruta base al archivo CSV en tu escritorio (ejemplo)
+base_csv_path = '"C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/dataAPi_7colum.csv"'
 
 # Función para cargar datos desde un archivo CSV
 def cargar_datos():
@@ -139,9 +151,6 @@ def estrenos_por_mes(mes: str = Query(..., description="Mes del estreno en espa�
     
     return {"cantidad_estrenos en el mes solicitado fue": cantidad}
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
 
 
 # Iniciar la aplicación con Uvicorn
