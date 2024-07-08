@@ -10,6 +10,26 @@ import uvicorn
 app = FastAPI()
 
 
+# Determina la ubicación del archivo CSV
+ruta_archivo = "dataAPi_7colum.csv"  # Ruta relativa (asume que el archivo está en el mismo directorio)
+
+
+# Obtener la ruta del directorio actual
+ruta_directorio_actual = os.getcwd()
+
+# Construir la ruta completa del archivo CSV
+ruta_completa_archivo = os.path.join(ruta_directorio_actual, ruta_archivo)
+
+# Usar la ruta completa del archivo en tu script
+with open(ruta_completa_archivo, "r") as archivo:
+    # Leer o procesar el contenido del archivo CSV
+    datos_csv = archivo.read()
+    # ... Procesar los datos ...
+
+
+
+
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
@@ -20,13 +40,11 @@ def read_root():
     return {"Hello": "World"}
 # Función para cargar datos desde un archivo CSV en Render
 
-# Ruta al archivo CSV
-archivo_csv = "C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/dataAPi_7colum.csv"
 
 # Función para cargar datos desde un archivo CSV
 def cargar_datos():
     try:
-        data = pd.read_csv(archivo_csv)
+        data = pd.read_csv(datos_csv)
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="Archivo de datos no encontrado")
     except pd.errors.EmptyDataError:
@@ -34,10 +52,6 @@ def cargar_datos():
     except pd.errors.ParserError:
         raise HTTPException(status_code=500, detail="Error al parsear el archivo de datos")
     return data
-
-
-
-
 
 
 
