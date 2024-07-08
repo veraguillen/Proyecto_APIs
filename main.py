@@ -31,7 +31,7 @@ data= "C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/dataAPi_
 # Función para cargar datos desde un archivo CSV
 def cargar_datos():
     try:
-        data = pd.read_csv("C:/Users/veram/OneDrive/Escritorio/Data Science Henry/FastAPI_OK/dataAPi_7colum.csv")
+        data = pd.read_csv(dataAPi_7colum.csv)
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="Archivo de datos no encontrado")
     except pd.errors.EmptyDataError:
